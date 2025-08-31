@@ -1,5 +1,8 @@
 # Credit Card Analytics with SQL
 
+## Data Source
+https://www.kaggle.com/datasets/thedevastator/analyzing-credit-card-spending-habits-in-india
+
 ## Problem Statements & Solutions
 
 ### 1. 
