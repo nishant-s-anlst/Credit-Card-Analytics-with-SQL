@@ -18,7 +18,7 @@ from credit_card_transcations
 cross join total_spent_cte t
 group  by city,t.total_spent
 order by expense desc;
-
+```
 ### 2. 
 **Objective:** To print highest spend month and amount spent in that month for each card type.
 
@@ -36,6 +36,7 @@ select *,
 RANK() over (partition by card_type order by monthly_expense desc) as rn
 from cte1) as r
 where rn=1;
+```
 
 ### 3.
 **Objective:** write a query to print the transaction details(all columns from the table) for each card type when it reaches a cumulative of 1000000 total spends(We should have 4 rows in the o/p one for each card type).
@@ -52,6 +53,7 @@ RANK() over (partition by card_type order by cum_sum) as rn
 from running_totals
 where cum_sum>=1000000) as r
 where rn=1;
+```
 
 ### 4.
 **Objective:** write a query to find city which had lowest percentage spend for gold card type.
@@ -70,7 +72,7 @@ round((gold_spend/total_spend)*100,2) as gold_contribution
 from cte1
 where gold_spend <>0
 order by gold_contribution asc;
-
+```
 ### 5.
 **Objective:** write a query to print 3 columns:  city, highest_expense_type , lowest_expense_type (example format : Delhi , bills, Fuel).
 
@@ -90,7 +92,7 @@ min(case when low_rn=1 then exp_type end) as lowest_expense_type,
 max(case when high_rn=1 then exp_type end) as highest_expense_type
 from cte1
 group by city;
-
+```
 ### 6.
 **Objective:** write a query to find percentage contribution of spends by females for each expense type.
 
@@ -106,7 +108,7 @@ group by exp_type
 select *,
 round((female_spend/total_spend)*100,2) as female_contribution
 from cte1;
-
+```
 ### 7.
 **Objective:** which card and expense type combination saw highest month over month growth in Jan-2014.
 
@@ -131,6 +133,7 @@ round((expense-prev_month_expense)/prev_month_expense*100,2) as mom_growth
 from cte2
 where mt=1 and yt=2014
 order by mom_growth desc;
+```
 
 ### 8. 
 **Objective:** during weekends which city has highest total spend to total no of transcations ratio.
@@ -142,7 +145,7 @@ from credit_card_transcations
 where DATENAME(weekday,transaction_date) in ('saturday','sunday')
 group by city
 order by ratio desc;
-
+```
 ### 9. 
 **Objective:** which city took least number of days to reach its 500th transaction after the first transaction in that city.
 
@@ -161,3 +164,4 @@ where rn in(1,500)
 select top 1 city, DATEDIFF(day,first_transaction_date,transaction_date) as days_to_500 from cte2
 where first_transaction_date is not null
 order by days_to_500;
+```
