@@ -28,36 +28,42 @@ FROM cte;
 **Objective:** To print highest spend month and amount spent in that month for each card type.
 
 ```sql
-with cte1 as (
-select card_type,
-datepart(year,transaction_date) as year,
-datepart(month,transaction_date) as month,
-SUM(amount) as monthly_expense
-from credit_card_transcations
-group by card_type, datepart(year,transaction_date),datepart(month,transaction_date)
+WITH cte1 AS (
+    SELECT 
+        card_type,
+        DATEPART(YEAR, transaction_date) AS year,
+        DATEPART(MONTH, transaction_date) AS month,
+        SUM(amount) AS monthly_expense
+    FROM credit_card_transcations
+    GROUP BY card_type, DATEPART(YEAR, transaction_date), DATEPART(MONTH, transaction_date)
 )
-select * from (
-select *,
-RANK() over (partition by card_type order by monthly_expense desc) as rn
-from cte1) as r
-where rn=1;
+SELECT * 
+FROM (
+    SELECT *,
+           RANK() OVER (PARTITION BY card_type ORDER BY monthly_expense DESC) AS rn
+    FROM cte1
+) AS r
+WHERE rn = 1;
 ```
 
 ### 3.
 **Objective:** write a query to print the transaction details(all columns from the table) for each card type when it reaches a cumulative of 1000000 total spends(We should have 4 rows in the o/p one for each card type).
 
 ```sql
-with running_totals as(
-select *,
-SUM(amount) over (partition by card_type order by transaction_date,transaction_id) as cum_sum
-from credit_card_transcations
+WITH running_totals AS (
+    SELECT *,
+           SUM(amount) OVER (PARTITION BY card_type ORDER BY transaction_date, transaction_id) AS cum_sum
+    FROM credit_card_transcations
 )
-select * from (
-select *,
-RANK() over (partition by card_type order by cum_sum asc) as rnk
-from running_totals
-where cum_sum>=1000000) as r
-where rnk=1;
+SELECT * 
+FROM (
+    SELECT *,
+           RANK() OVER (PARTITION BY card_type ORDER BY cum_sum ASC) AS rnk
+    FROM running_totals
+    WHERE cum_sum >= 1000000
+) AS r
+WHERE rnk = 1;
+
 ```
 
 ### 4.
