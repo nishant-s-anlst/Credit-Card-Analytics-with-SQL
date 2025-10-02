@@ -9,18 +9,20 @@ https://www.kaggle.com/datasets/thedevastator/analyzing-credit-card-spending-hab
 **Objective:** To find top 5 cities with highest spends and their percentage contribution of total credit card spends.  
 
 ```sql
-with total_spent_cte as(
-select SUM(amount) as total_spent
-from credit_card_transcations
+WITH cte AS (
+    SELECT TOP 5 
+        city, 
+        SUM(amount) AS expensed_amt, 
+        (SELECT SUM(amount) FROM credit_card_transcations) AS total_expensed_amt
+    FROM credit_card_transcations
+    GROUP BY city
+    ORDER BY expensed_amt DESC
 )
-select top 5
-city,
-sum(amount) as expense,
-round((sum(amount)/t.total_spent)*100,2) as pct_contribution
-from credit_card_transcations
-cross join total_spent_cte t
-group  by city,t.total_spent
-order by expense desc;
+SELECT 
+    city,
+    expensed_amt,
+    ROUND(expensed_amt/total_expensed_amt*100,2) AS pct_share
+FROM cte;
 ```
 ### 2. 
 **Objective:** To print highest spend month and amount spent in that month for each card type.
@@ -28,11 +30,11 @@ order by expense desc;
 ```sql
 with cte1 as (
 select card_type,
+datepart(year,transaction_date) as year,
 datepart(month,transaction_date) as month,
-datepart(year,transaction_date)  as year,
 SUM(amount) as monthly_expense
 from credit_card_transcations
-group by card_type,datepart(month,transaction_date), datepart(year,transaction_date)
+group by card_type, datepart(year,transaction_date),datepart(month,transaction_date)
 )
 select * from (
 select *,
@@ -52,10 +54,10 @@ from credit_card_transcations
 )
 select * from (
 select *,
-RANK() over (partition by card_type order by cum_sum) as rn
+RANK() over (partition by card_type order by cum_sum asc) as rnk
 from running_totals
 where cum_sum>=1000000) as r
-where rn=1;
+where rnk=1;
 ```
 
 ### 4.
