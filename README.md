@@ -47,7 +47,7 @@ WHERE rn = 1;
 ```
 
 ### 3.
-**Objective:** write a query to print the transaction details(all columns from the table) for each card type when it reaches a cumulative of 1000000 total spends(We should have 4 rows in the o/p one for each card type).
+**Objective:** To print the transaction details (all columns from the table) for each card type when it reaches a cumulative of 1000000 total spends.
 
 ```sql
 WITH running_totals AS (
@@ -63,7 +63,6 @@ FROM (
     WHERE cum_sum >= 1000000
 ) AS r
 WHERE rnk = 1;
-
 ```
 
 ### 4.
