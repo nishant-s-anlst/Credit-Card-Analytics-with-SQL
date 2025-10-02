@@ -66,22 +66,22 @@ WHERE rnk = 1;
 ```
 
 ### 4.
-**Objective:** write a query to find city which had lowest percentage spend for gold card type.
+**Objective:** To find city which had lowest percentage spend for gold card type.
 
 ```sql
-with cte1 as(
-select city,
-sum(case when card_type='gold' then amount else 0 end) as gold_spend,
-sum(amount) as total_spend
-from credit_card_transcations
-group by city 
+WITH cte AS (
+    SELECT 
+        city,
+        SUM(CASE WHEN card_type = 'gold' THEN amount END) AS gold_spend,
+        SUM(amount) AS total_spend
+    FROM credit_card_transcations
+    GROUP BY city
 )
-select top 1
-*,
-round((gold_spend/total_spend)*100,2) as gold_contribution
-from cte1
-where gold_spend <>0
-order by gold_contribution asc;
+SELECT TOP 1 *,
+       (gold_spend / total_spend) * 100 AS gold_share
+FROM cte
+WHERE gold_spend IS NOT NULL
+ORDER BY gold_share ASC;
 ```
 ### 5.
 **Objective:** write a query to print 3 columns:  city, highest_expense_type , lowest_expense_type (example format : Delhi , bills, Fuel).
