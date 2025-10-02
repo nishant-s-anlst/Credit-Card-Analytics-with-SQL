@@ -5,8 +5,7 @@ https://www.kaggle.com/datasets/thedevastator/analyzing-credit-card-spending-hab
 
 ## Problem Statements & Solutions
 
-### 1. 
-**Objective:** To find top 5 cities with highest spends and their percentage contribution of total credit card spends.  
+ **PROBLEM 1:** To find top 5 cities with highest spends and their percentage contribution of total credit card spends.  
 
 ```sql
 WITH cte AS (
@@ -24,8 +23,7 @@ SELECT
     ROUND(expensed_amt/total_expensed_amt*100,2) AS pct_share
 FROM cte;
 ```
-### 2. 
-**Objective:** To print highest spend month and amount spent in that month for each card type.
+**PROBLEM 2:** To print highest spend month and amount spent in that month for each card type.
 
 ```sql
 WITH cte1 AS (
@@ -46,8 +44,7 @@ FROM (
 WHERE rn = 1;
 ```
 
-### 3.
-**Objective:** To print the transaction details (all columns from the table) for each card type when it reaches a cumulative of 1000000 total spends.
+**PROBLEM 3:** To print the transaction details (all columns from the table) for each card type when it reaches a cumulative of 1000000 total spends.
 
 ```sql
 WITH running_totals AS (
@@ -65,8 +62,7 @@ FROM (
 WHERE rnk = 1;
 ```
 
-### 4.
-**Objective:** To find city which had lowest percentage spend for gold card type.
+**PROBLEM 4:** To find city which had lowest percentage spend for gold card type.
 
 ```sql
 WITH cte AS (
